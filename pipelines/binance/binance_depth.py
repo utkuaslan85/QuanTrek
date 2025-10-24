@@ -14,7 +14,7 @@ from bucket_v2 import process_orderbook
 import gc  # Add garbage collection
 
 # Configure logging with rotation
-log_file = "/mnt/vol1/logs/orderbook_transform_v3.log"
+log_file = "/mnt/vol1/logs/binance_depth_app.log"
 handler = RotatingFileHandler(
     log_file,
     maxBytes=50*1024*1024,  # 50MB per file
@@ -35,8 +35,8 @@ broker = NatsBroker(NATS_URL)
 app = FastStream(broker)
 
 # Define JetStream
-subject_pattern = "binance.depth.*"
 stream = "binance_depth"
+subject_pattern = "binance.depth.*"
 
 class SimpleBinanceRecorder:
     def __init__(self):

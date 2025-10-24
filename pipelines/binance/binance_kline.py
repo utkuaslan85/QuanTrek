@@ -11,7 +11,7 @@ from faststream.nats import NatsBroker
 import logging
 
 # Configure logging with rotation
-log_file = "/mnt/vol1/logs/kline_v1.log"
+log_file = "/mnt/vol1/logs/binance_kline_app.log"
 handler = RotatingFileHandler(
     log_file,
     maxBytes=50*1024*1024,  # 50MB per file
