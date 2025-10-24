@@ -21,4 +21,3 @@ def normalize_timestamp(timestamp):
     if len(str(int(timestamp))) > 10:  # Milliseconds have 13 digits, seconds have 10
         return timestamp / 1000
     return timestamp
-
