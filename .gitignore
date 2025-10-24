@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .env
 *.log
+**/__pycache__/
+src/quantrek_sandbox.egg-info
+pyproject.toml
