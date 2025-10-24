@@ -1,4 +1,4 @@
-from dumper_v2 import StreamParquetConsumer
+from dumper import StreamParquetConsumer
 import asyncio
 
 NATS_URL = "nats://localhost:4222"

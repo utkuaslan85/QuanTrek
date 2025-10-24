@@ -10,7 +10,7 @@ from faststream.nats import NatsBroker
 import logging
 from logging.handlers import RotatingFileHandler
 import pandas as pd
-from bucket_v2 import process_orderbook
+from bucket import process_orderbook
 import gc  # Add garbage collection
 
 # Configure logging with rotation

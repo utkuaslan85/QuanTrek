@@ -1,4 +1,4 @@
-from dumper_v2 import StreamParquetConsumer
+from dumper import StreamParquetConsumer
 import asyncio
 
 # This version (v1) implements the logic required to decode and unpack data serialized by bucket_v1.py.
