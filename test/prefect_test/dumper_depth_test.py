@@ -1,4 +1,4 @@
-from dumper_v2 import StreamParquetConsumer
+from dumper import StreamParquetConsumer
 import asyncio
 
 # This version (v2) aligns with bucket_v2.py, where previously nested (packed) structures 

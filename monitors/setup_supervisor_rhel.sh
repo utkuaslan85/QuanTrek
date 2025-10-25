@@ -30,6 +30,8 @@ echo "🔧 Configuring Supervisor XML-RPC interface..."
 sudo sed -i '/^\[inet_http_server\]/,/^$/d' $MAIN_CONFIG
 sudo tee -a $MAIN_CONFIG > /dev/null <<'EOF'
 
+# given ip:port is ip from zerotier vpn
+# change to 'localhost:9001' if zerotier network is abandoned
 [inet_http_server]
 port=192.168.193.147:9001
 username=admin

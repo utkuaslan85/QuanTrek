@@ -10,12 +10,15 @@ from dataclasses import dataclass, asdict
 from typing import Callable, Optional
 
 logging.basicConfig(
-    filename="/mnt/vol1/logs/dumper.log",  # Ensure this directory exists
+    filename="/mnt/vol1/logs/test_dumper.log",  # Ensure this directory exists
     level=logging.INFO,
     format="%(asctime)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 NATS_URL = "nats://localhost:4222"
+stream = "binance_depth"
+subject = "binance.depth.*"
+base_path = "/mnt/vol1/data/streams"
 
 @dataclass
 class Metadata:
@@ -649,3 +652,89 @@ def normalize_timestamp(timestamp):
     if len(str(int(timestamp))) > 10:  # Milliseconds have 13 digits, seconds have 10
         return timestamp / 1000
     return timestamp
+
+    # def add_transformer_with_args(self, func: Callable, *args, **kwargs):
+    #     """Add transformer with pre-bound arguments"""
+    #     def wrapper(msg):
+    #         return func(msg, *args, **kwargs)
+    #     async def async_wrapper(msg):
+    #         return await func(msg, *args, **kwargs)
+    #     # Choose wrapper based on function type
+    #     if asyncio.iscoroutinefunction(func):
+    #         self.transformers.append(async_wrapper)
+    #     else:
+    #         self.transformers.append(wrapper)
+    #     return self
+        
+    # async def transform(self, msg: Any) -> Any:
+    #     """Apply all transformers in sequence"""
+    #     result = msg
+    #     for transformer in self.transformers:
+    #         if asyncio.iscoroutinefunction(transformer):
+    #             result = await transformer(result)
+    #         else:
+    #             result = transformer(result)
+    #     return result
+    
+    # def with_transformer(self, func: Callable):
+    #     """Decorator to add transformer"""
+    #     self.add_transformer(func)
+    #     return func
+
+    # async def buffer_msgs(self, stream:str, subject:str, start_time:str=None):
+    #     """Start buffering transformed messages starting from start_time in iso format"""
+    #     now_time = datetime.now(tz=timezone.utc).timestamp()
+    #     cutoff_ts = self.cutoff_interval(now_time).timestamp() # in seconds ex: 1758402290.001
+    #     # start_ts = normalize_timestamp(start_time)
+    #     # start_iso = datetime.datetime.fromtimestamp(start_ts, tz=timezone.utc).isoformat()
+        
+    #     if start_time is None:
+    #         sub = await self.subscription(stream, subject, policy_type='all')
+    #     else:
+    #         sub = await self.subscription(stream, subject, policy_type='by_start_time', start_time=start_time)
+    #     messages = []
+        
+    #     try:
+    #         last_msg = await self.js.get_last_msg(stream, subject)
+    #         last_data = json.loads(last_msg.data.decode())
+    #         last_ts = last_data['timestamp']
+    #         logger.info(f"Recording started for {subject} from {start_time}")
+    #         async for msg in sub.messages:
+    #             try:
+    #                 data_received = json.loads(msg.data.decode())
+    #                 data = await self.transform(data_received)
+    #                 subject = msg.subject
+    #                 msg_ts = data['timestamp']
+    #                 msg_symbol = data['symbol']
+    #                 enriched_message = {
+    #                                     "timestamp": msg_ts,
+    #                                     "subject": subject,
+    #                                     "symbol": msg_symbol,
+    #                                     "data": data
+    #                                     }
+    #                 messages.append(enriched_message)
+    #                 if normalize_timestamp(msg_ts) >= normalize_timestamp(last_ts):
+    #                     logger.info(f"{msg_symbol}: Last message reached, stopping collection")
+    #                     # print("Last message reached, stopping collection")
+    #                     break
+    #                 elif normalize_timestamp(msg_ts) >= cutoff_ts:
+    #                     logger.info(f"{msg_symbol}: Cutoff time reached, stopping collection")
+    #                     # print("Cutoff time reached, stopping collection")
+    #                     break
+    #                 await msg.ack()
+    #             except Exception as e:
+    #                 logger.error(f"Error processing message: {e}")
+                    
+    #     except Exception as e:
+    #         logger.error(f"Error in message collection: {e}")
+    #     finally:
+    #         await sub.unsubscribe()
+        
+    #     return messages
+
+async def main():
+    pass
+
+if __name__ == "__main__":
+    asyncio.run(main())
+

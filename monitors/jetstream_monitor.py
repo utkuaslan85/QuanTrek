@@ -501,7 +501,8 @@ async def main():
     NATS_URL = "nats://localhost:4222"
     TELEGRAM_BOT_TOKEN = "8431905462:AAFdZ0idlGzNzHbMxZkMYBCm_LHAmOTAAHA"
     TELEGRAM_CHAT_ID = "7004807409"
-    SUPERVISOR_URL = "http://localhost:9001/RPC2"
+    # SUPERVISOR_URL = "http://localhost:9001/RPC2"
+    SUPERVISOR_URL = "http://192.168.193.147:9001/RPC2" #zerotier ip address
     SUPERVISOR_USERNAME = "admin"
     SUPERVISOR_PASSWORD = "admin123"
     

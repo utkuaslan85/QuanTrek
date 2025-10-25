@@ -1,4 +1,4 @@
-from dumper_v2 import StreamParquetConsumer
+from dumper import StreamParquetConsumer
 import asyncio
 
 # This version (v2) aligns with bucket_v2.py, where previously nested (packed) structures 
@@ -12,7 +12,7 @@ NATS_URL = "nats://localhost:4222"
 symbol = 'btcusdt'
 stream = ["binance_depth"]
 subject_pattern = ["binance.depth.*"]
-base_path = "/mnt/vol1/dummy/testing/test"
+base_path = "/mnt/vol1/dummy/testing"
 
 subject = [f"{subject_pattern[0][:-2]}.{symbol}"]
 
@@ -24,6 +24,11 @@ streamer = StreamParquetConsumer(base_path,
                                  )
 
 async def main():
-    await streamer.run()
-    await streamer.shutdown()
+    try:
+        await streamer.run()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt received, shutting down gracefully...")
+    finally:
+        await streamer.shutdown()
+
 asyncio.run(main())

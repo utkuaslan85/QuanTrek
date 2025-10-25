@@ -1,0 +1,36 @@
+# prefect.yaml
+name: cross-machine-jobs
+
+# Tell workers to use local code (no remote storage)
+pull: []
+
+deployments:
+  - name: oc-job-1
+    entrypoint: cross_machine_final.py:oc_job1
+    work_pool:
+      name: oc-pool
+      
+  - name: oc-job-2
+    entrypoint: cross_machine_final.py:oc_job2
+    work_pool:
+      name: oc-pool
+      
+  - name: oc-job-3
+    entrypoint: cross_machine_final.py:oc_job3
+    work_pool:
+      name: oc-pool
+      
+  - name: wd-job-1
+    entrypoint: cross_machine_final.py:wd_job1
+    work_pool:
+      name: wd-pool
+      
+  - name: wd-job-2
+    entrypoint: cross_machine_final.py:wd_job2
+    work_pool:
+      name: wd-pool
+      
+  - name: orchestrator
+    entrypoint: cross_machine_final.py:orchestrator
+    work_pool:
+      name: oc-pool

@@ -1,10 +1,10 @@
 from dumper import StreamParquetConsumer
 import asyncio
 
-NATS_URL = "nats://localhost:4222"
-
 # if subject_pattern is used, all subject in given streams are dumped
 # in other case change symbol to select related subject
+
+NATS_URL = "nats://localhost:4222"
 
 symbol = 'btcusdt'
 stream = ["binance_kline"]
@@ -21,6 +21,11 @@ streamer = StreamParquetConsumer(base_path,
                                  )
 
 async def main():
-    await streamer.run()
-    await streamer.shutdown()
+    try:
+        await streamer.run()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt received, shutting down gracefully...")
+    finally:
+        await streamer.shutdown()
+
 asyncio.run(main())
