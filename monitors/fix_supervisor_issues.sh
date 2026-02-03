@@ -7,9 +7,9 @@ echo "============================"
 # 1. Create the monitors directory if it doesn't exist
 echo ""
 echo "📁 Creating monitors directory..."
-mkdir -p /mnt/vol1/quantrek_sandbox/monitors
-chmod 755 /mnt/vol1/quantrek_sandbox/monitors
-echo "✅ Directory created: /mnt/vol1/quantrek_sandbox/monitors"
+mkdir -p /mnt/vol1/quantrek/monitors
+chmod 755 /mnt/vol1/quantrek/monitors
+echo "✅ Directory created: /mnt/vol1/quantrek/monitors"
 
 # 2. Update the Supervisor config to remove directory directive
 echo ""
@@ -18,8 +18,8 @@ sudo tee /etc/supervisord.d/binance_pipelines.ini > /dev/null <<EOF
 # Binance data pipelines configuration
 
 [program:binance_kline]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/pipelines/binance/binance_kline_test.py
-directory=/mnt/vol1/quantrek_sandbox/pipelines/binance
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/pipelines/binance/binance_kline_test.py
+directory=/mnt/vol1/quantrek/pipelines/binance
 user=opc
 autostart=true
 autorestart=true
@@ -29,8 +29,8 @@ stdout_logfile=/mnt/vol1/logs/binance_kline_test.out.log
 environment=PYTHONUNBUFFERED="1"
 
 [program:binance_depth]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/pipelines/binance/binance_depth_test.py
-directory=/mnt/vol1/quantrek_sandbox/pipelines/binance
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/pipelines/binance/binance_depth_test.py
+directory=/mnt/vol1/quantrek/pipelines/binance
 user=opc
 autostart=true
 autorestart=true
@@ -40,7 +40,7 @@ stdout_logfile=/mnt/vol1/logs/binance_depth_test.out.log
 environment=PYTHONUNBUFFERED="1"
 
 [program:jetstream_monitor]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/monitors/jetstream_monitor_test.py
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/monitors/jetstream_monitor_test.py
 directory=/mnt/vol1
 user=opc
 autostart=true

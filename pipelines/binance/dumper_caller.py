@@ -8,7 +8,7 @@ import asyncio
 # in other case change symbol to select related subject
 
 NATS_URL = "nats://localhost:4222"
-base_path = "/mnt/vol1/dummy/testing"
+base_path = "/mnt/vol1/data"
 streams: list[list[list[str]]] = []
 
 

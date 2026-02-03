@@ -9,7 +9,7 @@ NATS_URL = "nats://localhost:4222"
 symbol = 'btcusdt'
 stream = ["binance_kline"]
 subject_pattern = ["binance.kline.*"]
-base_path = "/mnt/vol1/dummy/testing"
+base_path = "/mnt/vol1/data"
 
 subject = [f"{subject_pattern[:-2]}.{symbol}"]
 

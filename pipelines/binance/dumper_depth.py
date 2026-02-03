@@ -12,8 +12,7 @@ NATS_URL = "nats://localhost:4222"
 symbol = 'btcusdt'
 stream = ["binance_depth"]
 subject_pattern = ["binance.depth.*"]
-base_path = "/mnt/vol1/dummy/testing"
-base_path = "/mnt/vol1/quantrek_sandbox/data"
+base_path = "/mnt/vol1/data"
 
 subject = [f"{subject_pattern[0][:-2]}.{symbol}"]
 

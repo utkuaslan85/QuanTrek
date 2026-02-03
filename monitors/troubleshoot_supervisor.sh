@@ -12,7 +12,7 @@ sudo supervisorctl status
 # 2. Check if jetstream_monitor file exists
 echo ""
 echo "📁 Checking if monitor file exists:"
-MONITOR_FILE="/mnt/vol1/quantrek_sandbox/monitors/jetstream_monitor_test.py"
+MONITOR_FILE="/mnt/vol1/quantrek/monitors/jetstream_monitor_test.py"
 if [ -f "$MONITOR_FILE" ]; then
     echo "✅ Found: $MONITOR_FILE"
 else
@@ -68,4 +68,4 @@ echo "  sudo supervisorctl reread"
 echo "  sudo supervisorctl update"
 echo ""
 echo "Manual test (to see errors directly):"
-echo "  /mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/monitors/jetstream_monitor_test.py"
+echo "  /mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/monitors/jetstream_monitor_test.py"

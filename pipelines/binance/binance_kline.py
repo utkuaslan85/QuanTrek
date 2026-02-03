@@ -225,4 +225,4 @@ if __name__ == "__main__":
     finally:
         recorder.stop()
         
-# nohup python /mnt/vol1/quantrek_sandbox/pipelines/binance/kline.py > /mnt/vol1/logs/kline.out 2>&1 &
+# nohup python /mnt/vol1/quantrek/pipelines/binance/kline.py > /mnt/vol1/logs/kline.out 2>&1 &

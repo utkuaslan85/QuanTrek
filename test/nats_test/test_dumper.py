@@ -3,7 +3,7 @@ import asyncio
 NATS_URL = "nats://localhost:4222"
 stream = ["binance_test"]
 subject = ["binance.test.test5"]
-base_path = "/mnt/vol1/dummy/testing"
+base_path = "/mnt/vol1/data"
 streamer = StreamParquetConsumer(base_path,
                                  streams=stream, 
                                  subject_pattern=subject, 

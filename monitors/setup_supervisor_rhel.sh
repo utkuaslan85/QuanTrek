@@ -63,8 +63,8 @@ sudo tee /etc/supervisord.d/binance_pipelines.ini > /dev/null <<EOF
 # Binance data pipelines configuration
 
 [program:binance_kline]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/pipelines/binance/binance_kline.py
-directory=/mnt/vol1/quantrek_sandbox/pipelines/binance
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/pipelines/binance/binance_kline.py
+directory=/mnt/vol1/quantrek/pipelines/binance
 user=$USER
 autostart=true
 autorestart=true
@@ -74,8 +74,8 @@ stdout_logfile=/mnt/vol1/logs/binance_kline_sup.out.log
 environment=PYTHONUNBUFFERED="1"
 
 [program:binance_depth]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/pipelines/binance/binance_depth.py
-directory=/mnt/vol1/quantrek_sandbox/pipelines/binance
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/pipelines/binance/binance_depth.py
+directory=/mnt/vol1/quantrek/pipelines/binance
 user=$USER
 autostart=true
 autorestart=true
@@ -85,8 +85,8 @@ stdout_logfile=/mnt/vol1/logs/binance_depth_sup.out.log
 environment=PYTHONUNBUFFERED="1"
 
 [program:jetstream_monitor]
-command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek_sandbox/monitors/jetstream_monitor.py
-directory=/mnt/vol1/quantrek_sandbox/monitors
+command=/mnt/vol1/.venv/bin/python /mnt/vol1/quantrek/monitors/jetstream_monitor.py
+directory=/mnt/vol1/quantrek/monitors
 user=$USER
 autostart=true
 autorestart=true

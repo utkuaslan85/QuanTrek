@@ -18,21 +18,21 @@ TELEGRAM_BOT_TOKEN = "8368353420:AAFwR5eXV8TkEFExBeqqjgkSdTZYdXzva_Q"
 TELEGRAM_CHAT_ID = "7004807409"
 
 # Dumper configuration
-DUMPER_SCRIPT = "/mnt/vol1/quantrek_sandbox/pipelines/binance/dumper_caller.py"
+DUMPER_SCRIPT = "/mnt/vol1/quantrek/pipelines/binance/dumper_caller.py"
 PYTHON_PATH = "/mnt/vol1/.venv/bin/python"
 DUMPER_MAX_RETRIES = 5
 DUMPER_BASE_DELAY = 240  # 4 minutes (in seconds)
 DUMPER_TIMEOUT = 1200  # 20 minutes per attempt
 
 # Paths
-SOURCE_DIR = "/mnt/vol1/dummy/testing/"
-STATE_FILE = "/mnt/vol1/dummy/testing/.sync_state.json"
+SOURCE_DIR = "/mnt/vol1/data"
+STATE_FILE = "/mnt/vol1/data/.sync_state.json"
 
 # Targets
 UBUNTU_IP = "192.168.193.40"
-UBUNTU_TARGET = "ubuntu:/media/me/ssdsata/project/dummy/testing/"
+UBUNTU_TARGET = "ubuntu:/media/me/ssdsata/project/data/"
 WSL_IP = "192.168.193.10"
-WSL_TARGET = "wsl:/mnt/d/project/dummy/testing/"
+WSL_TARGET = "wsl:/mnt/d/project/data/"
 
 # Rsync configuration
 RSYNC_MAX_RETRIES = 5
