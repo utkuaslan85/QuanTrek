@@ -370,7 +370,7 @@ Failed to subscribe to stream!"""
     
     async def status_reporter(self):
         """Background task to send periodic status reports"""
-        report_interval = 60*60*5  # Report every 5 hours
+        report_interval = 60*60*24  # Report every 24 hours
         
         while self.running:
             await asyncio.sleep(report_interval)

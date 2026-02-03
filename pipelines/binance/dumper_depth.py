@@ -13,6 +13,7 @@ symbol = 'btcusdt'
 stream = ["binance_depth"]
 subject_pattern = ["binance.depth.*"]
 base_path = "/mnt/vol1/dummy/testing"
+base_path = "/mnt/vol1/quantrek_sandbox/data"
 
 subject = [f"{subject_pattern[0][:-2]}.{symbol}"]
 
