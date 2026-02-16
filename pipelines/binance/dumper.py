@@ -31,6 +31,7 @@ class StreamParquetConsumer():
     def __init__(self, 
                  base_path:str,
                  *,
+                 resolution: str = "1s",
                  durable_name:Optional[str] = None,
                  streams:list[str] = None,
                  subject_pattern:list[str] = None,
@@ -42,6 +43,7 @@ class StreamParquetConsumer():
         self.nats_url = nats_url or NATS_URL
         self.streams = streams
         self.interval = interval
+        self.resolution = resolution
         self.transformers = transformer or {}
         self.config = None
         self.durable_name = durable_name
@@ -201,10 +203,18 @@ class StreamParquetConsumer():
                 
         return subjects_info
     
-    def create_symbol_path(self, stream:str, symbol:str):
-        symbol_path = (self.base_path / stream / symbol)
-        symbol_path.mkdir(parents=True, exist_ok=True)
-        return symbol_path
+    def _get_base_path(self, stream: str, symbol: str) -> Path:
+        """Single source of truth for base path structure"""
+        return self.base_path / stream / symbol / self.resolution
+
+    def _get_field_path(self, stream: str, symbol: str, field_path: str) -> Path:
+        """Get path for a specific field"""
+        return self._get_base_path(stream, symbol) / field_path
+
+    def create_symbol_path(self, stream: str, symbol: str):
+        path = self._get_base_path(stream, symbol)
+        path.mkdir(parents=True, exist_ok=True)
+        return path
 
     def get_metadata_file(self, symbol_path: str) -> Optional[Metadata]:
         """Load metadata from file, return None if doesn't exist"""
@@ -526,9 +536,13 @@ class StreamParquetConsumer():
             last_record_time=None
         )
 
+    def _get_metadata_path(self, stream: str, symbol: str, field_path: str) -> Path:
+        """Get metadata file path"""
+        return self._get_field_path(stream, symbol, field_path) / "metadata.json"
+
     async def get_field_metadata(self, stream, symbol, field_path, subject=None):
         """Get metadata for specific field - handles cold start"""
-        field_metadata_path = (self.base_path / stream / symbol / field_path / "metadata.json")
+        field_metadata_path = self._get_metadata_path(stream, symbol, field_path)
         
         try:
             if field_metadata_path.exists():
@@ -555,7 +569,7 @@ class StreamParquetConsumer():
     
     async def save_field_metadata(self, metadata: Metadata, stream, symbol, field_path):
         """Save field-specific metadata - creates directories if needed"""
-        field_metadata_path = (self.base_path / stream / symbol / field_path / "metadata.json")
+        field_metadata_path = self._get_metadata_path(stream, symbol, field_path)
         
         try:
             # Ensure all parent directories exist
@@ -579,7 +593,7 @@ class StreamParquetConsumer():
         parquet_path = self.create_parquet_path(stream, symbol, field_path, date)
         await self.append_to_parquet_with_dedup(parquet_path, batch_messages)
  
-    async def append_to_parquet_with_dedup(self, file_path, new_data):
+    async def append_to_parquet_with_dedup(self, file_path:Path, new_data):
         """Append to parquet with deduplication and time-based filtering"""
         import pandas as pd
         
@@ -607,10 +621,9 @@ class StreamParquetConsumer():
         logger.info(f"Saved {len(df_new)} new records to {file_path} (total: {len(df_combined)})")
 
     def create_parquet_path(self, stream, symbol, field_path, date):
-        """Create hierarchical parquet path"""
         return (
-            self.base_path / stream / symbol / field_path / 
-            f"year={date.year}" / f"month={date.month:02d}" / f"day={date.day:02d}.parquet"
+            self._get_field_path(stream, symbol, field_path) /
+            f"year={date.year}" / f"month={date.month:02d}" / f"day={date.day:02d}" / "data.parquet"
         )
     
     async def shutdown(self):

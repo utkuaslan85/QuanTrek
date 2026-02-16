@@ -4,5 +4,5 @@ __pycache__/
 .env
 *.log
 **/__pycache__/
-src/quantrek_sandbox.egg-info
+src/quantrek_.egg-info
 pyproject.toml

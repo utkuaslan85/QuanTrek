@@ -25,14 +25,14 @@ DUMPER_BASE_DELAY = 240  # 4 minutes (in seconds)
 DUMPER_TIMEOUT = 1200  # 20 minutes per attempt
 
 # Paths
-SOURCE_DIR = "/mnt/vol1/data"
+SOURCE_DIR = "/mnt/vol1/data/"
 STATE_FILE = "/mnt/vol1/data/.sync_state.json"
 
 # Targets
 UBUNTU_IP = "192.168.193.40"
-UBUNTU_TARGET = "ubuntu:/media/me/ssdsata/project/data/"
+UBUNTU_TARGET = "ubuntu:/media/me/ssdsata/project/data/raw/"
 WSL_IP = "192.168.193.10"
-WSL_TARGET = "wsl:/mnt/d/project/data/"
+WSL_TARGET = "wsl:/mnt/d/project/data/raw/"
 
 # Rsync configuration
 RSYNC_MAX_RETRIES = 5
