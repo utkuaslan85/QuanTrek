@@ -8,6 +8,9 @@ from nats.js.api import ConsumerConfig, DeliverPolicy
 import logging
 from dataclasses import dataclass, asdict
 from typing import Callable, Optional
+import os
+import pyarrow as pa
+import pandas as pd
 
 logging.basicConfig(
     filename="/mnt/vol1/logs/dumper.log",  # Ensure this directory exists
@@ -593,33 +596,36 @@ class StreamParquetConsumer():
         parquet_path = self.create_parquet_path(stream, symbol, field_path, date)
         await self.append_to_parquet_with_dedup(parquet_path, batch_messages)
  
-    async def append_to_parquet_with_dedup(self, file_path:Path, new_data):
-        """Append to parquet with deduplication and time-based filtering"""
-        import pandas as pd
-        
+    async def append_to_parquet_with_dedup(self, file_path, new_data):
         if not new_data:
             return
         
-        # Ensure directory exists
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        
         df_new = pd.DataFrame(new_data)
         
         if file_path.exists():
-            # Read existing data
-            df_existing = pd.read_parquet(file_path)
+            try:
+                df_existing = pd.read_parquet(file_path)
+            except (OSError, pa.ArrowInvalid) as e:
+                # Corrupt file — quarantine and treat as empty
+                corrupt_path = file_path.with_suffix('.parquet.corrupt')
+                file_path.rename(corrupt_path)
+                logger.error(f"Corrupt parquet quarantined: {corrupt_path} ({e})")
+                df_existing = pd.DataFrame()
             
-            # Combine and deduplicate
             df_combined = pd.concat([df_existing, df_new], ignore_index=True)
             df_combined = df_combined.drop_duplicates(subset=['timestamp'], keep='last')
             df_combined = df_combined.sort_values('timestamp')
-
         else:
             df_combined = df_new.sort_values('timestamp')
         
-        df_combined.to_parquet(file_path, index=False, compression='snappy')
+        # Atomic write: tmp → rename
+        tmp_path = file_path.with_suffix(file_path.suffix + '.tmp')
+        df_combined.to_parquet(tmp_path, index=False, compression='snappy')
+        os.replace(tmp_path, file_path)  # atomic on POSIX, same filesystem
+        
         logger.info(f"Saved {len(df_new)} new records to {file_path} (total: {len(df_combined)})")
-
+    
     def create_parquet_path(self, stream, symbol, field_path, date):
         return (
             self._get_field_path(stream, symbol, field_path) /
