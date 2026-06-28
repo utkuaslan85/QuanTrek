@@ -7,7 +7,8 @@ import threading
 import time
 from binance import ThreadedWebsocketManager
 from faststream import FastStream, Logger
-from faststream.nats import NatsBroker
+from faststream.nats import NatsBroker, JStream
+from nats.js.api import DiscardPolicy, StorageType
 import logging
 
 # Configure logging with rotation
@@ -31,6 +32,17 @@ NATS_URL = "nats://localhost:4222"
 broker = NatsBroker(NATS_URL)
 app = FastStream(broker)
 
+# Define JetStream
+RETENTION_SECONDS = 7 * 24 * 3600  # 7 days
+kline_stream = JStream(
+    name="binance_kline",
+    subjects=["binance.kline.>"],
+    max_age=RETENTION_SECONDS,
+    discard=DiscardPolicy.OLD,
+    storage=StorageType.FILE,
+    num_replicas=1,
+    declare=True,
+)
 stream = "binance_kline"
 subject_pattern = "binance.kline.*"
 
@@ -179,7 +191,7 @@ recorder = SimpleBinanceKlineRecorder()
 # JetStream subscriber to monitor all kline data
 @broker.subscriber(
     subject=subject_pattern,
-    stream=stream,
+    stream=kline_stream,
     deliver_policy="new",
 )
 async def monitor_kline_data(msg: str, logger: Logger):

@@ -6,11 +6,12 @@ import threading
 import time
 from binance import ThreadedDepthCacheManager
 from faststream import FastStream, Logger
-from faststream.nats import NatsBroker
+from faststream.nats import NatsBroker, JStream
 import logging
 from logging.handlers import RotatingFileHandler
 import pandas as pd
 from bucket import process_orderbook
+from nats.js.api import DiscardPolicy, StorageType
 import gc  # Add garbage collection
 
 # Configure logging with rotation
@@ -35,6 +36,17 @@ broker = NatsBroker(NATS_URL)
 app = FastStream(broker)
 
 # Define JetStream
+RETENTION_SECONDS = 7 * 24 * 3600  # 7 days
+depth_stream = JStream(
+    name="binance_depth",
+    subjects=["binance.depth.>"],
+    max_age=RETENTION_SECONDS,
+    discard=DiscardPolicy.OLD,
+    storage=StorageType.FILE,
+    num_replicas=1,
+    declare=True,  # FastStream recreates stream on startup if missing
+)
+
 stream = "binance_depth"
 subject_pattern = "binance.depth.*"
 
@@ -203,7 +215,7 @@ recorder = SimpleBinanceRecorder()
 # JetStream subscriber to monitor all depth data
 @broker.subscriber(
     subject=subject_pattern,
-    stream=stream,
+    stream=depth_stream,
     deliver_policy="new",
 )
 async def monitor_depth_data(msg: str, logger: Logger):
